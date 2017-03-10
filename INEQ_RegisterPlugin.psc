@@ -41,6 +41,7 @@ Quest	Property	AbilityAlias_Feet		Auto
 ;_____________________________________________________________________________________
 
 Event OnInit()
+	(AbilityRegister as INEQ_AbilityRegister).iPluginRegisterPending += 1
 		; Adds recharges sources in this mod to the main plugins's formlist
 	INEQ__RechargeSourceList.AddForm(RechargeSource)
 
@@ -58,5 +59,9 @@ Event OnInit()
 ;	INEQ__Equipment_WSwordQuests.AddForm(AbilityAlias_WSword)
 	
 		; Forces the main plugin to update its list of available abilities
-	(AbilityRegister as INEQ_AbilityRegister).maintenance()
+	(AbilityRegister as INEQ_AbilityRegister).attemptMaintenance()
+EndEvent
+
+Event OnPlayerLoadGame()
+	Debug.Notification("Register Plugin, playerloadgame")
 EndEvent
