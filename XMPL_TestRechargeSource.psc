@@ -33,7 +33,7 @@ Event OnPlayerLoadGame()
 EndEvent
 
 Function Maintenance()
-	parent.Maintenance()
+	parent.PlayerLoadGame()
 	; do stuff
 EndFunction
 
