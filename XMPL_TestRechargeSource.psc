@@ -5,7 +5,7 @@ Scriptname XMPL_TestRechargeSource extends INEQ_RechargeBase
 ; This can only deal with one ability at a time, to handle multiple abilities use an array to store the
 ; INEQ_EventListenerBases. And you'll need to manage the requests and send event with states.
 ; To see examples of this look at the INEQ_DistanceTravelled script and the INEQ_MagickaSiphon script
-; which is slightly more complicated but also more robust
+; which is slightly more complicated but also more robust as of writing this
 
 ;===========================================  Properties  ===========================================================================>
 
@@ -24,6 +24,7 @@ Function RegisterForTestRechargeEvent(INEQ_EventListenerBase akAsker, int akTime
 	asker = akAsker
 	RegisterForSingleUpdate(akTime)
 EndFunction
+;___________________________________________________________________________________________________________________________
 
 ; Uneregisters for an update if asker is currently registered
 Function UnregisterForTestRechargeEvent(INEQ_EventListenerBase akAsker)
@@ -32,6 +33,7 @@ Function UnregisterForTestRechargeEvent(INEQ_EventListenerBase akAsker)
 		asker = None
 	endif
 EndFunction
+;___________________________________________________________________________________________________________________________
 
 Event OnUpdate()
 	SendEvent()
