@@ -59,15 +59,12 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
 	
 	TestRecharge = TestRechargeAlias as XMPL_TestRechargeSource
 	
-	; The following are used to register for recharge sources
-	; See the function definition below for the funcitons native to the main mod
-	RegisterForRecharge()
-
 	; This funciton currently enables menu specific to this ability accessed through AbilityMenu() below
 	; Make sure you fill AbilityAliasProperties property with the AbilityAlias_Slot that contains this
 	; ability's keyword and AbilityAliasProperties.psc
 	RegisterAbilityToAlias()
 EndEvent
+;___________________________________________________________________________________________________________________________
 
 ; The Same is true for OnEffectFinish, however the call to the parent should generally be at the end
 Event OnEffectFinish(Actor akTarget, Actor akCaster)
@@ -75,6 +72,7 @@ Event OnEffectFinish(Actor akTarget, Actor akCaster)
 	bRegisteredTR = False
 	parent.EffectFinish(akTarget, akCaster)
 EndEvent
+;___________________________________________________________________________________________________________________________
 
 ; This function is also used by the main menu while resetting all abilities to default values
 function RestoreDefaultFields()
@@ -105,6 +103,10 @@ State Equipped
 	Event OnBeginState()
 		RegisterForAnimationEvent(selfRef, FootSprintLeft)
 		RegisterForAnimationEvent(selfRef, FootSprintRight)
+		
+		; The following is used to register for recharge sources
+		; See the function definition below for the funcitons native to the main mod
+		RegisterForRecharge()
 	EndEVent
 	
 	; This event contains the main effect which is activated every footstep
@@ -116,38 +118,55 @@ State Equipped
 		UnregisterForAnimationEvent(selfRef, FootSprintLeft)
 		UnregisterForAnimationEvent(selfRef, FootSprintRight)
 	EndEvent
+	;___________________________________________________________________________________________________________________________
+
+;		THESE ARE UNRELATED TO THE SPRINT TRAIL ABILITY. THEY'RE HERE TO DEMONSTRATE RECHARGE MECHANICS
+
+	; Recives events after registering for magicka siphon event
+	; NOTE that while this acts like an event, it is written as a function
+	Function OnMagickaSiphonEvent()
+		Debug.Notification("Magicka siphon event while " +GetState())
+		RegisterForMagickaSiphonEvent(ChargeCostMS, ChargePriorityMS)
+	EndFunction
+
+	; Recives events after registering for distance travelled event
+	; NOTE that while this acts like an event, it is written as a function
+	Function OnDistanceTravelledEvent()
+		Debug.Notification("Distance travelled event while " +GetState())
+		RegisterForDistanceTravelledEvent(ChargeCostDT)
+	EndFunction
+
+	; Recives events after registering for custom recharge source Test Recharge
+	; Custom events must manually turn off charging bool
+	Function OnCustomRechargeEvent(String asEventName)
+		if asEventName == "Test Recharge"
+			Debug.Notification("Test Recharge event while " +GetState())
+			bRegisteredTR = False
+			TestRecharge.RegisterForTestRechargeEvent(self, ChargeTimeTR)
+		endif
+	EndFunction
 
 EndState
 
 ;===============================================================================================================================
 ;====================================		   Functions		================================================
 ;================================================================================================
-
-;		THESE ARE UNRELATED TO THE SPRINT TRAIL ABILITY. THEY'RE HERE TO DEMONSTRATE RECHARGE MECHANICS
-
-; Recives events after registering for magicka siphon event
-; NOTE that while this acts like an event, it is written as a function
+;				Catches charge event without registering for another charge
 Function OnMagickaSiphonEvent()
 	Debug.Notification("Magicka siphon event while " +GetState())
-	RegisterForMagickaSiphonEvent(ChargeCostMS, ChargePriorityMS)
 EndFunction
 
-; Recives events after registering for distance travelled event
-; NOTE that while this acts like an event, it is written as a function
 Function OnDistanceTravelledEvent()
 	Debug.Notification("Distance travelled event while " +GetState())
-	RegisterForDistanceTravelledEvent(ChargeCostDT)
 EndFunction
 
-; Recives events after registering for custom recharge source Test Recharge
-; Custom events must manually turn off charging bool
 Function OnCustomRechargeEvent(String asEventName)
 	if asEventName == "Test Recharge"
 		Debug.Notification("Test Recharge event while " +GetState())
 		bRegisteredTR = False
-		TestRecharge.RegisterForTestRechargeEvent(self, ChargeTimeTR)
 	endif
 EndFunction
+;___________________________________________________________________________________________________________________________
 
 ; This is a useful function for requesting an event from recharge sources
 ; If the parameter is left empty, bForced is false, meaning that it will be ignored
