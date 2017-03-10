@@ -49,14 +49,13 @@ XMPL_TestRechargeSource TestRecharge
 
 ; The Parent class defines OnEffectStart so if you override it you must start it with parent.EffectStart(akTarget, akCaster)
 Event OnEffectStart(Actor akTarget, Actor akCaster)
-
 	; Read the source code for AbilityBase and EventListenerBase to see how/why this is implemented
 	parent.EffectStart(akTarget, akCaster)
 	
 	; Initializes properties to default values
-	RestoreDefaultFields()	
-	; Used to communicate with custom recharge sources. Make sure this is defined before Recharge register
+	RestoreDefaultFields()
 	
+	; Used to communicate with custom recharge sources. Make sure this is defined before Recharge register
 	TestRecharge = TestRechargeAlias as XMPL_TestRechargeSource
 	
 	; This funciton currently enables menu specific to this ability accessed through AbilityMenu() below
@@ -76,6 +75,7 @@ EndEvent
 
 ; This function is also used by the main menu while resetting all abilities to default values
 function RestoreDefaultFields()
+	parent.RestoreDefaultFields()
 	bBalanced		= True
 	exampleBool		= False
 	ChargeCostDT	= DEFChargeCostDT
