@@ -16,6 +16,38 @@ bool bTestToggle = False
 INEQ_EventListenerBase asker
 
 ;===============================================================================================================================
+;====================================	    Maintenance			================================================
+;================================================================================================
+
+;	This script doesn't require the following maintenence functions and could actually be
+;	left out entirely, however in case you need to add additional behavior to them use this format
+
+Event OnInit()
+	parent.Init()
+	; do stuff
+EndEvent
+
+Event OnPlayerLoadGame()
+	parent.PlayerLoadGame()
+	; do stuff
+EndEvent
+
+Function Maintenance()
+	parent.Maintenance()
+	; do stuff
+EndFunction
+
+Function RestoreDefaultFields()
+	parent.RestoreDefaultFields()
+	; do stuff
+EndFunction
+
+Function FullReset()
+	parent.FullReset()
+	; do stuff
+EndFunction
+
+;===============================================================================================================================
 ;====================================			Functions			================================================
 ;================================================================================================
 
